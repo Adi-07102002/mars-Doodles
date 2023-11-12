@@ -11,6 +11,7 @@ const WhiteBoard = ({
   setElements,
   tool,
   color,
+  Fillcolor,
 }) => {
 
   const [isDrawing, setIsDrawing] = useState(false);
@@ -28,7 +29,8 @@ const WhiteBoard = ({
 
   useEffect(() => {
     ctxRef.current.strokeStyle = color;
-  }, [color]);
+    ctxRef.current.fillStyle = Fillcolor;
+  }, [color,Fillcolor]);
 
 
   useLayoutEffect(() => {
@@ -37,6 +39,7 @@ const WhiteBoard = ({
       ctxRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
     }
     elements.forEach((element) => {
+    
       if (element.type === "rec") {
         roughCanvas.draw(
           roughGenerator.rectangle(
@@ -47,7 +50,9 @@ const WhiteBoard = ({
             {
               stroke: element.stroke,
               strokeWidth: 5,
-              roughness: 0
+              roughness: 0,
+              fill:element.Fillcolor,
+              fillStyle: 'solid',
             }
           )
         );
@@ -73,6 +78,17 @@ const WhiteBoard = ({
           roughGenerator.ellipse(element.offsetX, element.offsetY, element.width, element.height, {
             stroke: element.stroke,
             strokeWidth: 5,
+            roughness: 0,
+            fill:element.Fillcolor,
+            fillStyle: 'solid',
+          })
+        );
+      }
+      else if (element.type === "eraser") {
+        roughCanvas.draw(
+          roughGenerator.line(element.offsetX, element.offsetY, element.width, element.height, {
+            stroke: element.stroke,
+            strokeWidth: 15,
             roughness: 0
           })
         );
@@ -92,6 +108,7 @@ const WhiteBoard = ({
           offsetY,
           path: [[offsetX, offsetY]],
           stroke: color,
+
         },
       ]);
     }
@@ -134,6 +151,18 @@ const WhiteBoard = ({
         }
       ]);
     }
+    else if (tool === "eraser") {
+      setElements((prevElements) => [
+        ...prevElements,
+        {
+          type: "pencil",
+          offsetX,
+          offsetY,
+          path: [[offsetX, offsetY]],
+          stroke: 'white',
+        },
+      ]);
+    }
     setIsDrawing(true);
   }
 
@@ -142,7 +171,7 @@ const WhiteBoard = ({
     if (isDrawing) {
       //pencil by default
 
-      if (tool === "pencil") {
+      if (tool === "pencil"  || tool==="eraser") {
         const { path } = elements[elements.length - 1];
         const newPath = [...path, [offsetX, offsetY]];
         setElements((prevElements) =>
@@ -181,6 +210,7 @@ const WhiteBoard = ({
                 ...ele,
                 width: offsetX - ele.offsetX,
                 height: offsetY - ele.offsetY,
+                Fillcolor: Fillcolor
               };
             }
             else
@@ -196,6 +226,7 @@ const WhiteBoard = ({
                 ...ele,
                 width: offsetX - ele.offsetX,
                 height: offsetY - ele.offsetY,
+                Fillcolor: Fillcolor
               };
             }
             else
@@ -212,12 +243,12 @@ const WhiteBoard = ({
   }
   return (
     <div
-
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       className='border border-dark border-3 h-100 w-100 overflow-hidden '
     >
+      
       <canvas
         height="1000%"
         width="1500%"

@@ -9,6 +9,7 @@ const RoomPage = () => {
 
     const [tool, setTool] = useState("pencil");
     const [color, setColor] = useState("#000000");
+    const [Fillcolor, setFillColor] = useState("#ffffff");
     const [elements, setElements] = useState([]);
     const [history,setHistory]=useState([]);
 
@@ -65,13 +66,27 @@ const RoomPage = () => {
                         <input type="radio" checked={tool === "ellipse"} name="tool" className='mt-1' id="ellipse" value="ellipse" onChange={(e) => setTool(e.target.value)} />
                     </div>
 
+                    <div className='d-flex gap-1 align-items-center'>
+                        <label htmlFor="eraser">
+                        Eraser
+                        </label>
+                        <input type="radio" checked={tool === "eraser"} name="tool" className='mt-1' id="eraser" value="eraser" onChange={(e) => setTool(e.target.value)} />
+                    </div>
+
                     {/* <input type="radio" name="tool" value="poly" onChange={(e)=>setTool(e.target.value)}/> */}
                 </div>
 
                 <div className='col-md-2 mx-auto'>
                     <div className='d-flex align-items-center'>
-                        <label htmlFor='color'>Select color:</label>
+                        <label htmlFor='color'>Select color for stroke:</label>
                         <input type="color" id="color" className='mt-1 ms-3' value={color} onChange={(e) => setColor(e.target.value)} />
+                    </div>
+                </div>
+
+                <div className='col-md-2 mx-auto'>
+                    <div className='d-flex align-items-center'>
+                        <label htmlFor='color'>Select color for fill:</label>
+                        <input type="color" id="color" className='mt-1 ms-3' value={Fillcolor} onChange={(e) => setFillColor(e.target.value)} />
                     </div>
                 </div>
 
@@ -94,6 +109,7 @@ const RoomPage = () => {
                     elements={elements}
                     setElements={setElements}
                     color={color}
+                    Fillcolor={Fillcolor}
                     tool={tool}
                 />
             </div>
