@@ -10,6 +10,7 @@ const RoomPage = () => {
     const [tool, setTool] = useState("pencil");
     const [color, setColor] = useState("#000000");
     const [Fillcolor, setFillColor] = useState("#ffffff");
+    const [strokeSize, setStrokeSize] = useState("5");
     const [elements, setElements] = useState([]);
     const [history,setHistory]=useState([]);
 
@@ -90,6 +91,13 @@ const RoomPage = () => {
                     </div>
                 </div>
 
+                <div className='col-md-2 mx-auto'>
+                    <div className='d-flex align-items-center'>
+                        <label htmlFor='stroke'>Select color for fill:</label>
+                        <input type="number" id="stroke" className='mt-1 ms-3' value={strokeSize} onChange={(e) => setStrokeSize(e.target.value)} />
+                    </div>
+                </div>
+
                 <div className='col-md-3 d-flex gap-2'>
                     <button className='btn btn-primary mt-1'
                     disabled={elements.length===0}
@@ -111,6 +119,7 @@ const RoomPage = () => {
                     color={color}
                     Fillcolor={Fillcolor}
                     tool={tool}
+                    strokeSize={strokeSize}
                 />
             </div>
 

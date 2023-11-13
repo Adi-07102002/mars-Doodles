@@ -12,6 +12,7 @@ const WhiteBoard = ({
   tool,
   color,
   Fillcolor,
+  strokeSize,
 }) => {
 
   const [isDrawing, setIsDrawing] = useState(false);
@@ -19,10 +20,9 @@ const WhiteBoard = ({
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-    // canvas.height=window.innerHeight;
-    // canvas.width=window.innerWidth;
+
     ctx.strokeStyle = color;
-    ctx.lineWidth = 2;
+    ctx.lineWidth = strokeSize;
     ctx.lineCap = "round";
     ctxRef.current = ctx;
   })
@@ -30,7 +30,8 @@ const WhiteBoard = ({
   useEffect(() => {
     ctxRef.current.strokeStyle = color;
     ctxRef.current.fillStyle = Fillcolor;
-  }, [color,Fillcolor]);
+    ctxRef.current.strokeWidth= strokeSize;
+  }, [color,Fillcolor,strokeSize]);
 
 
   useLayoutEffect(() => {
@@ -49,7 +50,7 @@ const WhiteBoard = ({
             element.height,
             {
               stroke: element.stroke,
-              strokeWidth: 5,
+              strokeWidth:element.strokeSize,
               roughness: 0,
               fill:element.Fillcolor,
               fillStyle: 'solid',
@@ -60,7 +61,7 @@ const WhiteBoard = ({
       else if (element.type === "pencil") {
         roughCanvas.linearPath(element.path, {
           stroke: element.stroke,
-          strokeWidth: 5,
+          strokeWidth: element.strokeSize,
           roughness: 0
         });
       }
@@ -68,7 +69,7 @@ const WhiteBoard = ({
         roughCanvas.draw(
           roughGenerator.line(element.offsetX, element.offsetY, element.width, element.height, {
             stroke: element.stroke,
-            strokeWidth: 5,
+            strokeWidth: element.strokeSize,
             roughness: 0
           })
         );
@@ -77,7 +78,7 @@ const WhiteBoard = ({
         roughCanvas.draw(
           roughGenerator.ellipse(element.offsetX, element.offsetY, element.width, element.height, {
             stroke: element.stroke,
-            strokeWidth: 5,
+            strokeWidth: element.strokeSize,
             roughness: 0,
             fill:element.Fillcolor,
             fillStyle: 'solid',
@@ -88,7 +89,7 @@ const WhiteBoard = ({
         roughCanvas.draw(
           roughGenerator.line(element.offsetX, element.offsetY, element.width, element.height, {
             stroke: element.stroke,
-            strokeWidth: 15,
+            strokeWidth: element.strokeSize,
             roughness: 0
           })
         );
@@ -179,7 +180,8 @@ const WhiteBoard = ({
             if (index === elements.length - 1) {
               return {
                 ...ele,
-                path: newPath
+                path: newPath,
+                strokeSize:strokeSize
               }
             }
             else
@@ -195,6 +197,7 @@ const WhiteBoard = ({
                 ...ele,
                 width: offsetX,
                 height: offsetY,
+                strokeSize:strokeSize
               };
             }
             else
@@ -210,7 +213,8 @@ const WhiteBoard = ({
                 ...ele,
                 width: offsetX - ele.offsetX,
                 height: offsetY - ele.offsetY,
-                Fillcolor: Fillcolor
+                Fillcolor: Fillcolor,
+                strokeSize:strokeSize
               };
             }
             else
@@ -226,7 +230,8 @@ const WhiteBoard = ({
                 ...ele,
                 width: offsetX - ele.offsetX,
                 height: offsetY - ele.offsetY,
-                Fillcolor: Fillcolor
+                Fillcolor: Fillcolor,
+                strokeSize:strokeSize
               };
             }
             else
