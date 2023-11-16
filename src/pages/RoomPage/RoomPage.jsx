@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { UNSAFE_DataRouterContext } from "react-router-dom";
+import SocialShare from "../../Components/SocialShare/SocialShare";
 import WhiteBoard from '../../Components/Whiteboard/Whiteboard';
 import "./RoomPage.css"
+import html2canvas from "html2canvas";
 
 const RoomPage = () => {
     const canvas = useRef(null);
@@ -34,6 +36,16 @@ const RoomPage = () => {
             (prevHistory)=>prevHistory.slice(0,prevHistory.length-1)
         )
     }
+
+    const CaptureImage=()=>{
+        html2canvas(document.querySelector("#drawing")).then(function(canvas){
+            var a=document.createElement('a');
+            a.href=canvas.toDataURL("..assets/image/jpeg").replace("image/jpeg","image/octet-stream");
+            a.download="somefilename.jpg";
+            a.click();
+        })
+    }
+
     return (
         <div className='row'>
             <h1 className='text-center py-4'>White board Sharing App<span className='text-primary'>[ Users online:0 ]</span></h1>
@@ -110,7 +122,7 @@ const RoomPage = () => {
                     <button className="btn btn-danger" onClick={handleClearCanvas}>Clear canvas</button>
                 </div>
             </div>
-            <div className='col-md-10  mx-auto mt-4 canvas-box '>
+            <div className='col-md-10  mx-auto mt-4 canvas-box ' id="drawing">
                 <WhiteBoard 
                     canvasRef={canvas} 
                     ctxRef={ctx}
@@ -121,6 +133,11 @@ const RoomPage = () => {
                     tool={tool}
                     strokeSize={strokeSize}
                 />
+            </div>
+            <div className='col-md-10  mx-auto mt-4  '>
+                <SocialShare/>
+                <button className='btn btn-primary mt-1'
+                    onClick={()=>CaptureImage()}>Save image</button>
             </div>
 
         </div>
